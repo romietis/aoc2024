@@ -14,42 +14,33 @@ type XY struct {
 }
 
 func main() {
-	lines, err := readInput("example.txt")
+	lines, err := readInput("input.txt")
 	if err != nil {
 		fmt.Println("Error reading input:", err)
 		return
 	}
 
+	// Parse input
 	ordering, updates := getOrderingAndUpdates(lines)
-
 	xyList := getXYList(ordering)
 	listOfIntUpdates := getListOfIntUpdates(updates)
+	correctOrders, incorrectOrders := getCorrectAndIncorrectOrders(listOfIntUpdates, xyList)
 
-	correctOrders := [][]int{}
-	for _, update := range listOfIntUpdates {
-		isValid := true
-		for i := 0; i < len(update)-1; i++ {
-			fmt.Println("Checking:", update)
-			if !rightOrder(update[i], update[i+1], xyList) {
-				fmt.Println("Not in right order:", update[i], update[i+1])
-				isValid = false
-				break
-			}
-		}
-		if isValid {
-			correctOrders = append(correctOrders, update)
-		}
-	}
-	fmt.Println("Correct orders:", correctOrders)
-
-	sumOfMiddleElements := 0
-	// get middle element
-	for _, order := range correctOrders {
-		index := len(order) / 2
-		fmt.Println("Middle element:", order[index])
-		sumOfMiddleElements += order[index]
-	}
+	// Part 1
+	sumOfMiddleElements := getSumOfMiddleElements(correctOrders)
 	fmt.Println("Sum of middle elements:", sumOfMiddleElements)
+
+	// Part 2
+	// Stupid way to correct the order, but it works
+	finalCorrectedOrders := [][]int{}
+	for i := 0; i < len(incorrectOrders); i++ {
+		incorrectOrders = correctTheOrder(incorrectOrders, xyList)
+		if i == len(incorrectOrders)-1 {
+			finalCorrectedOrders = incorrectOrders
+		}
+	}
+	sumOfMiddleElements = getSumOfMiddleElements(finalCorrectedOrders)
+	fmt.Println("Sum of middle elements after correction:", sumOfMiddleElements)
 
 }
 
@@ -117,4 +108,49 @@ func rightOrder(x, y int, xys []XY) bool {
 		}
 	}
 	return false
+}
+
+func getCorrectAndIncorrectOrders(listOfIntUpdates [][]int, xyList []XY) ([][]int, [][]int) {
+	correctOrders := [][]int{}
+	incorrectOrder := [][]int{}
+	for _, update := range listOfIntUpdates {
+		isValid := true
+		for i := 0; i < len(update)-1; i++ {
+			if !rightOrder(update[i], update[i+1], xyList) {
+				isValid = false
+				break
+			}
+		}
+		if isValid {
+			correctOrders = append(correctOrders, update)
+		}
+		if !isValid {
+			incorrectOrder = append(incorrectOrder, update)
+		}
+	}
+	return correctOrders, incorrectOrder
+}
+
+func getSumOfMiddleElements(correctOrders [][]int) int {
+	sumOfMiddleElements := 0
+	for _, order := range correctOrders {
+		index := len(order) / 2
+		sumOfMiddleElements += order[index]
+	}
+	return sumOfMiddleElements
+}
+
+func correctTheOrder(incorrectOrders [][]int, xyList []XY) [][]int {
+	correctedOrders := [][]int{}
+	for _, order := range incorrectOrders {
+		for i := 0; i < len(order)-1; i++ {
+			if !rightOrder(order[i], order[i+1], xyList) {
+				tempValue := order[i]
+				order[i] = order[i+1]
+				order[i+1] = tempValue
+			}
+		}
+		correctedOrders = append(correctedOrders, order)
+	}
+	return correctedOrders
 }
