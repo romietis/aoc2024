@@ -145,9 +145,7 @@ func correctTheOrder(incorrectOrders [][]int, xyList []XY) [][]int {
 	for _, order := range incorrectOrders {
 		for i := 0; i < len(order)-1; i++ {
 			if !rightOrder(order[i], order[i+1], xyList) {
-				tempValue := order[i]
-				order[i] = order[i+1]
-				order[i+1] = tempValue
+				order[i], order[i+1] = order[i+1], order[i]
 			}
 		}
 		correctedOrders = append(correctedOrders, order)
