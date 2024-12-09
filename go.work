@@ -1,4 +1,4 @@
-go 1.23.3
+go 1.23.4
 
 use (
 	./day1
@@ -7,4 +7,5 @@ use (
 	./day4
 	./day5
 	./day7
+	./day9
 )
