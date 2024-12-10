@@ -6,7 +6,6 @@ import (
 	"os"
 )
 
-// Update main() to use the new function:
 func main() {
 	grid, err := readFileToRuneGrid("input.txt")
 	if err != nil {
