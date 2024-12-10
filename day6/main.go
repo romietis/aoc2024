@@ -13,8 +13,6 @@ func main() {
 		return
 	}
 
-	// directions := [4]rune{'>', 'v', '<', '^'}
-
 	for isDirection(grid) {
 		x, y := findStartingPoint(grid)
 		direction := grid[x][y]
