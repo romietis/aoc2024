@@ -102,8 +102,7 @@ func sortDisk(disk []int) []int {
 						latestNumber = i
 						break
 					}
-				}
-				fmt.Println("Disk: ", disk)
+				}	
 			}
 		}
 	}
@@ -169,7 +168,6 @@ func sortDiskV2(disk []int) []int {
 			for i := fileStart; i < fileStart+fileSize; i++ {
 				disk[i] = -1
 			}
-			fmt.Println("Disk: ", disk)
 		}
 	}
 	return disk
